@@ -15,7 +15,25 @@ async function handleRequest(event) {
     var jsonResponse = [];
     var jsonElement;
     var data;
+    if (req.serverId.length != 19) {
+        return new Response("Invalid Guild ID: " + req.serverId, {
+            status: 400,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS'
+            }
+        });
+    }
     if (req.userId != null) {
+        if (req.userId.length > 18 || req.userId.length < 17) {
+            return new Response("Invalid User ID: " + req.userId, {
+                status: 400,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS'
+                }
+            });
+        }
         if (await collection.findOne({ "id": req.userId }) != null) {
             data = [
                 await collection.findOne({ "id": req.userId })
@@ -40,8 +58,7 @@ async function handleRequest(event) {
     return new Response(JSON.stringify(jsonResponse), {
         headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS',
-            'Access-Control-Max-Age': '86400',
+            'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS'
         }
     });
 }
