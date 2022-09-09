@@ -16,9 +16,13 @@ async function handleRequest(event) {
     var jsonElement;
     var data;
     if (req.userId != null) {
-        data = [
-            await collection.findOne({ "id": req.userId })
-        ];
+        if (await collection.findOne({ "id": req.userId }) != null) {
+            data = [
+                await collection.findOne({ "id": req.userId })
+            ];
+        } else {
+            data = [];
+        }
     } else {
         data = await collection.find();
     }
