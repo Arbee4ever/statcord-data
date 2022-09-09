@@ -14,7 +14,14 @@ async function handleRequest(event) {
 
     var jsonResponse = [];
     var jsonElement;
-    const data = await collection.find();
+    var data;
+    if (req.userId != null) {
+        data = [
+            await collection.findOne({ "id": req.userId })
+        ];
+    } else {
+        data = await collection.find();
+    }
     for (const element of data) {
         var discordData = await getDiscordData(element.id);
         var discordDataJson = await discordData.json();
